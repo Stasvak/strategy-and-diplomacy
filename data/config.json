@@ -1,0 +1,28 @@
+{
+  "governments": [
+    "Republic",
+    "Federal Republic",
+    "Parliamentary Republic",
+    "Presidential Republic",
+    "Constitutional Monarchy",
+    "Absolute Monarchy",
+    "Military Government",
+    "One-Party State"
+  ],
+  "ideologies": [
+    "Liberal",
+    "Conservative",
+    "Socialist",
+    "Authoritarian",
+    "Nationalist",
+    "Technocratic",
+    "Isolationist",
+    "Expansionist"
+  ],
+  "resources": [
+    {"id":"money","name":"Money","unit":"currency"},
+    {"id":"oil","name":"Oil","unit":"bbl"},
+    {"id":"steel","name":"Steel","unit":"t"},
+    {"id":"food","name":"Food","unit":"t"}
+  ]
+}

@@ -1,0 +1,87 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>STRATEGY & DIPLOMACY — Prototype</title>
+  <link rel="stylesheet" href="styles/style.css">
+</head>
+<body>
+  <div id="app">
+    <header class="topbar">
+      <div class="top-left">
+        <h1>STRATEGY & DIPLOMACY</h1>
+        <div class="clock">
+          <button id="playPause">Pause</button>
+          <select id="speedSelect">
+            <option value="0">Paused</option>
+            <option value="1" selected>1x</option>
+            <option value="2">2x</option>
+            <option value="4">4x</option>
+            <option value="8">8x</option>
+          </select>
+          <span id="gameTime">Year 1, Day 0</span>
+        </div>
+      </div>
+      <div class="top-right" id="resourceBar">
+        <div class="res">Treasury: <span id="treasury">1000</span></div>
+        <div class="res">Oil: <span id="oil">500</span></div>
+        <div class="res">Steel: <span id="steel">300</span></div>
+        <div class="res">Manpower: <span id="manpower">50</span></div>
+      </div>
+    </header>
+
+    <div class="main">
+      <nav class="sidebar">
+        <button id="openCreator">Nation Creator</button>
+        <ul>
+          <li><button id="navOverview">Country Overview</button></li>
+          <li><button id="navEconomy">Economy</button></li>
+          <li><button id="navDiplomacy">Diplomacy</button></li>
+          <li><button id="navMilitary">Military</button></li>
+        </ul>
+      </nav>
+
+      <section class="center">
+        <canvas id="mapCanvas" width="1000" height="600"></canvas>
+        <div class="mapHint">Use mouse to pan. Scroll to zoom. Click provinces.</div>
+      </section>
+
+      <aside class="context" id="contextPanel">
+        <h2>Selected</h2>
+        <div id="selectedInfo">No selection</div>
+      </aside>
+    </div>
+
+    <div id="nationModal" class="modal hidden">
+      <div class="modal-content">
+        <h2>Create a Nation</h2>
+        <form id="nationForm">
+          <label>Official name<input name="officialName" required></label>
+          <label>Common name<input name="commonName"></label>
+          <label>Short name<input name="shortName"></label>
+          <label>Abbreviation<input name="abbr"></label>
+          <label>Capital<input name="capital"></label>
+          <label>Leader name<input name="leader"></label>
+          <label>Leader title<input name="leaderTitle"></label>
+          <label>Currency<input name="currency"></label>
+          <label>Colour<input type="color" name="color" value="#2b5ea8"></label>
+          <label>Flag (emoji)<input name="flag" maxlength="2" value="🏳️"></label>
+          <label>Government type<select name="government" id="govSelect"></select></label>
+          <label>Ideology<select name="ideology" id="ideologySelect"></select></label>
+          <label>Starting treasury<input type="number" name="treasury" value="1000"></label>
+          <label>Starting oil<input type="number" name="oil" value="500"></label>
+          <label>Starting steel<input type="number" name="steel" value="300"></label>
+          <div class="modal-actions">
+            <button type="submit">Create</button>
+            <button type="button" id="closeModal">Cancel</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+  </div>
+  <script src="data/config.json" type="application/json" id="configData"></script>
+  <script src="scripts/app.js"></script>
+</body>
+</html>

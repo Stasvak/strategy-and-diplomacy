@@ -1,0 +1,17 @@
+{
+  "officialName":"New State",
+  "commonName":"Newland",
+  "shortName":"New",
+  "abbr":"NS",
+  "capital":"New City",
+  "leader":"Leader",
+  "leaderTitle":"President",
+  "currency":"New Dollar",
+  "color":"#2b5ea8",
+  "flag":"🏳️",
+  "government":"Republic",
+  "ideology":"Liberal",
+  "treasury":1000,
+  "oil":500,
+  "steel":300
+}
