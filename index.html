@@ -1,87 +1,277 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>STRATEGY & DIPLOMACY — Prototype</title>
-  <link rel="stylesheet" href="styles/style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>STRATEGY & DIPLOMACY — Grand Strategy Simulator</title>
+  <link rel="stylesheet" href="styles/base.css">
+  <link rel="stylesheet" href="styles/ui.css">
+  <link rel="stylesheet" href="styles/map.css">
+  <link rel="stylesheet" href="styles/modals.css">
 </head>
 <body>
   <div id="app">
+    <!-- Top Bar -->
     <header class="topbar">
-      <div class="top-left">
-        <h1>STRATEGY & DIPLOMACY</h1>
-        <div class="clock">
-          <button id="playPause">Pause</button>
-          <select id="speedSelect">
-            <option value="0">Paused</option>
-            <option value="1" selected>1x</option>
-            <option value="2">2x</option>
-            <option value="4">4x</option>
-            <option value="8">8x</option>
-          </select>
-          <span id="gameTime">Year 1, Day 0</span>
+      <div class="topbar-left">
+        <h1 class="game-title">STRATEGY & DIPLOMACY</h1>
+        <div class="simulation-controls">
+          <button id="btnPause" class="btn-control btn-pause" title="Pause Simulation">⏸ Pause</button>
+          <button id="btnPlay" class="btn-control btn-play hidden" title="Resume Simulation">▶ Play</button>
+          <div class="speed-selector">
+            <label for="speedControl">Speed:</label>
+            <select id="speedControl">
+              <option value="0">Paused</option>
+              <option value="0.5">0.5x</option>
+              <option value="1" selected>1x</option>
+              <option value="2">2x</option>
+              <option value="4">4x</option>
+              <option value="8">8x</option>
+            </select>
+          </div>
+          <div class="date-display">
+            <span id="dateDisplay">Year 1, Day 1</span>
+          </div>
         </div>
       </div>
-      <div class="top-right" id="resourceBar">
-        <div class="res">Treasury: <span id="treasury">1000</span></div>
-        <div class="res">Oil: <span id="oil">500</span></div>
-        <div class="res">Steel: <span id="steel">300</span></div>
-        <div class="res">Manpower: <span id="manpower">50</span></div>
+      <div class="topbar-right">
+        <div class="resource-bar">
+          <div class="resource-item">
+            <span class="resource-label">Treasury</span>
+            <span class="resource-value" id="res-treasury">0</span>
+          </div>
+          <div class="resource-item">
+            <span class="resource-label">Population</span>
+            <span class="resource-value" id="res-population">0</span>
+          </div>
+          <div class="resource-item">
+            <span class="resource-label">Oil</span>
+            <span class="resource-value" id="res-oil">0</span>
+          </div>
+          <div class="resource-item">
+            <span class="resource-label">Steel</span>
+            <span class="resource-value" id="res-steel">0</span>
+          </div>
+          <div class="resource-item">
+            <span class="resource-label">Food</span>
+            <span class="resource-value" id="res-food">0</span>
+          </div>
+        </div>
       </div>
     </header>
 
-    <div class="main">
+    <!-- Main Layout -->
+    <div class="main-layout">
+      <!-- Left Sidebar -->
       <nav class="sidebar">
-        <button id="openCreator">Nation Creator</button>
-        <ul>
-          <li><button id="navOverview">Country Overview</button></li>
-          <li><button id="navEconomy">Economy</button></li>
-          <li><button id="navDiplomacy">Diplomacy</button></li>
-          <li><button id="navMilitary">Military</button></li>
-        </ul>
+        <div class="sidebar-section">
+          <h3>Game</h3>
+          <button class="sidebar-btn" id="btnNewGame">New Game</button>
+          <button class="sidebar-btn" id="btnLoadGame">Load Game</button>
+          <button class="sidebar-btn" id="btnSaveGame">Save Game</button>
+        </div>
+        <div class="sidebar-section">
+          <h3>Navigation</h3>
+          <button class="sidebar-btn" id="btnOverview" data-panel="overview">Nation Overview</button>
+          <button class="sidebar-btn" id="btnMilitary" data-panel="military">Military Command</button>
+          <button class="sidebar-btn" id="btnDiplomacy" data-panel="diplomacy">Diplomacy</button>
+          <button class="sidebar-btn" id="btnEconomy" data-panel="economy">Economy & Trade</button>
+          <button class="sidebar-btn" id="btnInfrastructure" data-panel="infrastructure">Infrastructure</button>
+          <button class="sidebar-btn" id="btnIntelligence" data-panel="intelligence">Intelligence</button>
+          <button class="sidebar-btn" id="btnResearch" data-panel="research">Research & Tech</button>
+          <button class="sidebar-btn" id="btnPolitics" data-panel="politics">Politics</button>
+        </div>
+        <div class="sidebar-section">
+          <h3>Map View</h3>
+          <select id="mapMode">
+            <option value="political">Political</option>
+            <option value="terrain">Terrain</option>
+            <option value="military">Military</option>
+            <option value="infrastructure">Infrastructure</option>
+            <option value="economic">Economic</option>
+            <option value="diplomatic">Diplomatic</option>
+            <option value="intelligence">Intelligence</option>
+          </select>
+        </div>
+        <div class="sidebar-section">
+          <h3>Alerts</h3>
+          <div id="alertsList" class="alerts-list"></div>
+        </div>
       </nav>
 
-      <section class="center">
-        <canvas id="mapCanvas" width="1000" height="600"></canvas>
-        <div class="mapHint">Use mouse to pan. Scroll to zoom. Click provinces.</div>
-      </section>
+      <!-- Central Map Area -->
+      <div class="map-container">
+        <canvas id="gameMap" class="game-canvas"></canvas>
+        <div class="map-controls">
+          <button id="btnZoomIn" class="map-btn">🔍+</button>
+          <button id="btnZoomOut" class="map-btn">🔍−</button>
+          <button id="btnResetView" class="map-btn">↺ Reset</button>
+        </div>
+        <div class="map-legend" id="mapLegend"></div>
+      </div>
 
-      <aside class="context" id="contextPanel">
-        <h2>Selected</h2>
-        <div id="selectedInfo">No selection</div>
+      <!-- Right Context Panel -->
+      <aside class="context-panel">
+        <div class="panel-tabs">
+          <button class="panel-tab active" data-tab="selection">Selection</button>
+          <button class="panel-tab" data-tab="details">Details</button>
+          <button class="panel-tab" data-tab="actions">Actions</button>
+        </div>
+        <div class="panel-content">
+          <div id="tab-selection" class="tab-content active">
+            <div id="selectionInfo">Click on the map to select a province or unit.</div>
+          </div>
+          <div id="tab-details" class="tab-content">
+            <div id="detailsInfo"></div>
+          </div>
+          <div id="tab-actions" class="tab-content">
+            <div id="actionsInfo"></div>
+          </div>
+        </div>
       </aside>
     </div>
+  </div>
 
-    <div id="nationModal" class="modal hidden">
-      <div class="modal-content">
+  <!-- Modals -->
+  <div id="nationCreatorModal" class="modal hidden">
+    <div class="modal-dialog">
+      <div class="modal-header">
         <h2>Create a Nation</h2>
-        <form id="nationForm">
-          <label>Official name<input name="officialName" required></label>
-          <label>Common name<input name="commonName"></label>
-          <label>Short name<input name="shortName"></label>
-          <label>Abbreviation<input name="abbr"></label>
-          <label>Capital<input name="capital"></label>
-          <label>Leader name<input name="leader"></label>
-          <label>Leader title<input name="leaderTitle"></label>
-          <label>Currency<input name="currency"></label>
-          <label>Colour<input type="color" name="color" value="#2b5ea8"></label>
-          <label>Flag (emoji)<input name="flag" maxlength="2" value="🏳️"></label>
-          <label>Government type<select name="government" id="govSelect"></select></label>
-          <label>Ideology<select name="ideology" id="ideologySelect"></select></label>
-          <label>Starting treasury<input type="number" name="treasury" value="1000"></label>
-          <label>Starting oil<input type="number" name="oil" value="500"></label>
-          <label>Starting steel<input type="number" name="steel" value="300"></label>
-          <div class="modal-actions">
-            <button type="submit">Create</button>
-            <button type="button" id="closeModal">Cancel</button>
+        <button class="modal-close" data-close="nationCreatorModal">×</button>
+      </div>
+      <div class="modal-body">
+        <form id="nationCreatorForm">
+          <div class="form-section">
+            <h3>Identity</h3>
+            <div class="form-group">
+              <label>Official Name *</label>
+              <input type="text" name="officialName" required>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Common Name</label>
+                <input type="text" name="commonName">
+              </div>
+              <div class="form-group">
+                <label>Abbreviation</label>
+                <input type="text" name="abbreviation" maxlength="3">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Capital City</label>
+              <input type="text" name="capital">
+            </div>
+            <div class="form-group">
+              <label>Currency</label>
+              <input type="text" name="currency" value="Gold">
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Leadership</h3>
+            <div class="form-group">
+              <label>Leader Name</label>
+              <input type="text" name="leaderName">
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Leader Title</label>
+                <input type="text" name="leaderTitle" value="President">
+              </div>
+              <div class="form-group">
+                <label>Government Type *</label>
+                <select name="government" required id="govSelect"></select>
+              </div>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Appearance</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Primary Color</label>
+                <input type="color" name="primaryColor" value="#2b5ea8">
+              </div>
+              <div class="form-group">
+                <label>Secondary Color</label>
+                <input type="color" name="secondaryColor" value="#1a3a52">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Flag Emoji (temporary)</label>
+              <input type="text" name="flagEmoji" maxlength="2" value="🏳️">
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Ideology</h3>
+            <div class="form-group">
+              <label>Primary Ideology *</label>
+              <select name="ideology" required id="ideologySelect"></select>
+            </div>
+          </div>
+
+          <div class="form-section">
+            <h3>Starting Resources</h3>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Treasury</label>
+                <input type="number" name="startTreasury" value="5000" min="0">
+              </div>
+              <div class="form-group">
+                <label>Population (millions)</label>
+                <input type="number" name="startPopulation" value="50" min="1" step="0.1">
+              </div>
+            </div>
+            <div class="form-row">
+              <div class="form-group">
+                <label>Oil (barrels)</label>
+                <input type="number" name="startOil" value="1000" min="0">
+              </div>
+              <div class="form-group">
+                <label>Steel (tons)</label>
+                <input type="number" name="startSteel" value="500" min="0">
+              </div>
+            </div>
+            <div class="form-group">
+              <label>Food (tons)</label>
+              <input type="number" name="startFood" value="2000" min="0">
+            </div>
           </div>
         </form>
       </div>
+      <div class="modal-footer">
+        <button class="btn btn-secondary" data-close="nationCreatorModal">Cancel</button>
+        <button class="btn btn-primary" id="btnCreateNation">Create Nation</button>
+      </div>
     </div>
-
   </div>
-  <script src="data/config.json" type="application/json" id="configData"></script>
-  <script src="scripts/app.js"></script>
+
+  <!-- Scripts -->
+  <script src="data/config.js"></script>
+  <script src="data/terrain-data.js"></script>
+  <script src="data/world-data.js"></script>
+  <script src="js/utils/math-utils.js"></script>
+  <script src="js/utils/storage-utils.js"></script>
+  <script src="js/core/event-system.js"></script>
+  <script src="js/core/simulation-engine.js"></script>
+  <script src="js/core/game-state.js"></script>
+  <script src="js/world/world-manager.js"></script>
+  <script src="js/world/nation-manager.js"></script>
+  <script src="js/world/province-manager.js"></script>
+  <script src="js/systems/economy-system.js"></script>
+  <script src="js/systems/military-system.js"></script>
+  <script src="js/systems/diplomacy-system.js"></script>
+  <script src="js/systems/research-system.js"></script>
+  <script src="js/systems/politics-system.js"></script>
+  <script src="js/systems/infrastructure-system.js"></script>
+  <script src="js/systems/intelligence-system.js"></script>
+  <script src="js/ai/ai-controller.js"></script>
+  <script src="js/renderer/map-renderer.js"></script>
+  <script src="js/renderer/ui-renderer.js"></script>
+  <script src="js/ui/nation-creator.js"></script>
+  <script src="js/ui/panels.js"></script>
+  <script src="js/ui/modals.js"></script>
+  <script src="js/game.js"></script>
 </body>
 </html>
